@@ -1,10 +1,11 @@
 const express = require('express')
-const fs = require("fs")
 const app = express()
 
+let a = [];
+let i=0;
 app.all('/', (req, res) => {
-    console.log("Just got a request!");
-    fs.writeFileSync("a.txt", "boom its workked");
-    res.send('Yo1234!')
+    i++;
+    a.push(i)
+    res.send(JSON.stringify(a))
 })
 app.listen(process.env.PORT || 3000)
