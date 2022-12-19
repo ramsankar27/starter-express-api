@@ -1,11 +1,22 @@
-const express = require('express')
-const app = express()
+// Import
+const http = require('http');
+const app = require('./app');
+// const { loadPlanetData } = require('./models/planets.model');
 
-let a = [];
-let i=0;
-app.all('/', (req, res) => {
-    i++;
-    a.push(i)
-    res.send(JSON.stringify(a))
-})
-app.listen(process.env.PORT || 3000)
+// Environment variable
+const PORT = 8000;
+
+
+const server = http.createServer(app);
+
+
+function loadServer() {
+    // await loadPlanetData();
+    // listening
+    server.listen(PORT, () => {
+        console.log(`Server listening at ${PORT} ...`);
+    })
+}
+
+
+loadServer();
