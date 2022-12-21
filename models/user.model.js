@@ -112,8 +112,11 @@ function sellCoins(coinDetail, userId) {
 }
 
 function sendCoins(coinDetail, senderId, receiverId){
+    console.log(reciverId);
+    console.log(users);
     let senderIdIndex = users.findIndex(x => x.userId === senderId);
     let senderCoinIndex = users[senderIdIndex].coins.findIndex(x => x.id === coinDetail.id);
+    console.log(users[senderIdIndex].coins);
     users[senderIdIndex].coins.splice(senderCoinIndex, 1);
     let receiverIndex = users.findIndex(x => x.userId === receiverId);
     let existing = users[receiverIndex].coins.findIndex(x => x.id === coinDetail.id);
