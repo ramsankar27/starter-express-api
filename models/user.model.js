@@ -8,6 +8,16 @@ const users = [
         email: 'admin@gmail.com',
         password: '1234'
     },
+    {
+        userId: 1,
+        history: [],
+        amount: 0,
+        coins: [],
+        userName: '1',
+        email: '1',
+        password: '1'
+      }
+    
 ];
 
 function getAllCoins() {
@@ -112,13 +122,10 @@ function sellCoins(coinDetail, userId) {
 }
 
 function sendCoins(coinDetail, senderId, receiverId){
-    console.log(reciverId);
-    console.log(users);
     let senderIdIndex = users.findIndex(x => x.userId === senderId);
     let senderCoinIndex = users[senderIdIndex].coins.findIndex(x => x.id === coinDetail.id);
-    console.log(users[senderIdIndex].coins);
     users[senderIdIndex].coins.splice(senderCoinIndex, 1);
-    let receiverIndex = users.findIndex(x => x.userId === receiverId);
+    let receiverIndex = users.findIndex(x => x.userId === Number(receiverId));
     let existing = users[receiverIndex].coins.findIndex(x => x.id === coinDetail.id);
     if (existing !== -1) {
         users[receiverIndex].coins[existing].purchaseQuantity += coinDetail.purchaseQuantity;
@@ -140,8 +147,7 @@ function sendCoins(coinDetail, senderId, receiverId){
         time: new Date()
     }
     makeHistory(coinHistorySender, senderId);
-    makeHistory(coinHistoryReciever, receiverId);
-    console.log(users);
+    makeHistory(coinHistoryReciever, Number(receiverId));
 
 }
 
