@@ -7,7 +7,8 @@ const {
     httpSellCoins,
     httpGetSingleUserDetails,
     httpGetAllCoins,
-    httpLogin
+    httpLogin,
+    httpSendCoins
 } = require('./users.controler');
 
 const userRouter = express.Router();
@@ -34,5 +35,9 @@ userRouter.post('/sell/:id', httpSellCoins);
 
 // buy
 userRouter.post('/buy/:id', httpBuyCoins);
+
+//send 
+userRouter.post('/send/:id', httpSendCoins);
+
 
 module.exports = userRouter
