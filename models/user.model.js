@@ -6,8 +6,8 @@ const users = [
         history: [],
         coins: [],
         email: 'admin@gmail.com',
-        password: 'password1234'
-    }
+        password: '1234'
+    },
 ];
 
 function getAllCoins() {
@@ -78,7 +78,7 @@ function buyCoins(coinDetail, amount, userId) {
     let userIndex = users.findIndex(x => x.userId === userId);
     let existing = users[userIndex].coins.findIndex(x => x.id === coinDetail.id);
     if (existing !== -1) {
-        users[userIndex].coins[existing].purchaseQuantity = coinDetail.purchaseQuantity;
+        users[userIndex].coins[existing].purchaseQuantity += coinDetail.purchaseQuantity;
     } else {
         users[userIndex].coins.push(coinDetail);
     }
@@ -89,7 +89,8 @@ function buyCoins(coinDetail, amount, userId) {
         amount: amount,
         time: new Date()
     }
-    users[userIndex].amount -= parseInt(amount);
+    let amt = users[userIndex].amount;
+    users[userIndex].amount =  amt;
     makeHistory(coinHistory, userId);
 }
 
@@ -108,6 +109,37 @@ function sellCoins(coinDetail, userId) {
     }
     users[userIndex].amount += (quantity*price);
     makeHistory(coinHistory, userId)
+}
+
+function sendCoins(coinDetail, senderId, receiverId){
+    let senderIdIndex = users.findIndex(x => x.userId === senderId);
+    let senderCoinIndex = users[senderIdIndex].coins.findIndex(x => x.id === coinDetail.id);
+    users[senderIdIndex].coins.splice(senderCoinIndex, 1);
+    let receiverIndex = users.findIndex(x => x.userId === receiverId);
+    let existing = users[receiverIndex].coins.findIndex(x => x.id === coinDetail.id);
+    if (existing !== -1) {
+        users[receiverIndex].coins[existing].purchaseQuantity += coinDetail.purchaseQuantity;
+    } else {
+        users[receiverIndex].coins.push(coinDetail);
+    }
+    let coinHistorySender = {
+        name: coinDetail,
+        quantity: coinDetail.purchaseQuantity,
+        about: 'send',
+        amount: 0,
+        time: new Date()
+    }
+    let coinHistoryReciever = {
+        name: coinDetail,
+        quantity: coinDetail.purchaseQuantity,
+        about: 'receive',
+        amount: 0,
+        time: new Date()
+    }
+    makeHistory(coinHistorySender, senderId);
+    makeHistory(coinHistoryReciever, receiverId);
+    console.log(users);
+
 }
 
 function makeHistory(historyData, userId) {
@@ -130,5 +162,6 @@ module.exports = {
     invest,
     getSingleUserDetails,
     addUser,
-    login
+    login,
+    sendCoins
 }
