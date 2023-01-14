@@ -1,6 +1,8 @@
 // Import
 const express = require('express');
 
+
+const grocessoryRouter = require('./routes/grocessory/grocessory.router');
 const userRouter = require('./routes/users/users.router')
 
 
@@ -12,8 +14,14 @@ const app = express();
 // use middelware to log our request
 // add middleware to parse request as JSON format
 app.use(express.json());
-// app.use('/planets', planetRouter);
-// app.use('/launches', launchsRosuter);
+
+
+// crypt trade router
 app.use('/', userRouter);
+
+// grocessory router
+app.use('/mygrocessory', grocessoryRouter);
+
+
 // export
 module.exports = app; 
