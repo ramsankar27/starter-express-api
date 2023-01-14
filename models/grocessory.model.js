@@ -11,17 +11,6 @@ const usersList = [
     myOrders: [],
     userOrders: []
   },
-  {
-    mail: '1',
-    password: '1',
-    name: 'Gokila',
-    userId: 1,
-    pincode: '626125',
-    city: "Rajapalayam",
-    address: '32, south street',
-    myOrders: [],
-    userOrders: []
-  },
 ];
 
 let productList = [
