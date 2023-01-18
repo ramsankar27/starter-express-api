@@ -7,7 +7,9 @@ const {
     login,
     getSingleUserDetails,
     addUser,
-    sendCoins
+    sendCoins,
+    getUser,
+    convertCoin
 }
     = require('../../models/user.model');
 
@@ -66,6 +68,19 @@ function httpLogin(req, res) {
     else res.status(200).json(false);
 }
 
+function httpGetAllUser(req,res) {
+    return res.status(200).json(getUser());
+}
+
+function httpConvertCoins(req, res) {
+    oldCoinId = req.body.oldId;
+    newCoin = req.body.newCoin;
+    const userId = Number(req.params.id);
+    let resDone = convertCoin(oldCoinId, newCoin, userId);
+    if(resDone) res.status(200).json(true);
+    else res.status(200).json(false);
+} 
+
 module.exports = {
     httpGetAllCoins,
     httpAddUser,
@@ -75,5 +90,7 @@ module.exports = {
     httpSellCoins,
     httpGetSingleUserDetails,
     httpLogin,
-    httpSendCoins
+    httpSendCoins,
+    httpGetAllUser,
+    httpConvertCoins
 }

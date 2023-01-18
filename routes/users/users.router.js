@@ -8,7 +8,9 @@ const {
     httpGetSingleUserDetails,
     httpGetAllCoins,
     httpLogin,
-    httpSendCoins
+    httpSendCoins,
+    httpGetAllUser,
+    httpConvertCoins
 } = require('./users.controler');
 
 const userRouter = express.Router();
@@ -38,6 +40,12 @@ userRouter.post('/buy/:id', httpBuyCoins);
 
 //send 
 userRouter.post('/send/:id', httpSendCoins);
+
+// get all user
+userRouter.get('/all-user', httpGetAllUser);
+
+// buy
+userRouter.post('/convert/:id', httpConvertCoins);
 
 
 module.exports = userRouter
