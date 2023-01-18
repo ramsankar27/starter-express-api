@@ -59,6 +59,7 @@ function addUser(userDetail) {
 function invest(amount, userId) {
     let userIndex = users.findIndex(x => x.userId === userId);
     users[userIndex].amount += parseInt(amount);  
+
     // make history
     let coinHistory = {
         name: '',
@@ -68,6 +69,7 @@ function invest(amount, userId) {
         time: new Date()
     }
     makeHistory(coinHistory, userId);
+    return userIndex !== -1  ? 1 : 0;
 }
 
 function withdraw(userId) {
@@ -162,6 +164,29 @@ function getHistory(userId) {
     return users.find(x => x.userId === userId).history;
 }
 
+function getUser() {
+    return users;
+}
+
+function convertCoin(oldId, newCoin, userId) {
+    let userIndex = users.findIndex(x=> x.userId === userId);
+    if(userIndex === -1) {
+        return false
+    }
+    let coins = users[userIndex]['coins'];
+    // push new coin
+    let alIndex = coins.findIndex(x=> x.id === newCoin.id);
+    if(alIndex === -1) {
+      coins.push(newCoin);
+    } else {
+      coins[alIndex]['purchaseQuantity']+= newCoinsQuan;
+    }
+    // remove old coin
+    let oldIndex = coins.findIndex(x=> x.id === oldId);
+    coins.splice(oldIndex, 1);
+    users[userIndex]['coins'] = coins;
+    return true;
+}
 
 module.exports = {
     getAllCoins,
@@ -172,5 +197,7 @@ module.exports = {
     getSingleUserDetails,
     addUser,
     login,
-    sendCoins
+    sendCoins,
+    getUser,
+    convertCoin
 }
