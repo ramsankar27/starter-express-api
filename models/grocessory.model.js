@@ -168,7 +168,7 @@ let orderList = [];
 let user = makeid(500);
 let order = makeid(500);
 let my_file = '123';
-fs.writeFileSync('program.txt', JSON.stringify('123'))
+fs.writeFileSync('program.txt', JSON.stringify('file content'))
 const json = fs.readFileSync('program.txt')
 // functions
 
@@ -176,7 +176,7 @@ const json = fs.readFileSync('program.txt')
 
 // get all user
 async function getAllUser() {
-  console.log(JSON.Parse(json), 2343);
+  console.log(JSON.parse(json), 'consoloe');
   return JSON.Parse(json);
 }
 
