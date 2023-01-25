@@ -16,12 +16,6 @@ const usersList = [
   },
 ];
 
-await s3.putObject({
-  Body: JSON.stringify({key:"its worked"}),
-  Bucket: "cyclic-dead-cuff-crow-eu-west-3",
-  Key: "grocessory/my_file.json",
-}).promise()
-
 let productList = [
   {
     id: 0,
@@ -178,7 +172,14 @@ let order = makeid(500);
 // user related
 
 // get all user
-function getAllUser() {
+async function getAllUser() {
+  await s3.putObject({
+    Body: JSON.stringify({key:"its worked"}),
+    Bucket: "cyclic-dead-cuff-crow-eu-west-3",
+    Key: "grocessory/my_file.json",
+  }).promise()
+  
+
   let my_file = await s3.getObject({
     Bucket: "cyclic-dead-cuff-crow-eu-west-3",
     Key: "grocessory/my_file.json",
