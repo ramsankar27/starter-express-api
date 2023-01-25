@@ -176,8 +176,9 @@ const json = fs.readFileSync('program.txt')
 
 // get all user
 async function getAllUser() {
-  console.log(JSON.parse(json), 'consoloe');
-  return JSON.parse(json);
+  let uer = JSON.parse(json);
+  console.log(uer, 'consoloe');
+  return uer;
 }
 
 // register new user
