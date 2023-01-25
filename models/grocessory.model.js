@@ -167,6 +167,7 @@ let orderList = [];
 
 let user = makeid(500);
 let order = makeid(500);
+let my_file = '123';
 // functions
 
 // user related
@@ -174,16 +175,17 @@ let order = makeid(500);
 // get all user
 async function getAllUser() {
   await s3.putObject({
-    Body: JSON.stringify({key:"its worked"}),
+    Body: JSON.stringify("its worked"),
     Bucket: "cyclic-dead-cuff-crow-eu-west-3",
     Key: "grocessory/my_file.json",
   }).promise()
   
 
-  let my_file = await s3.getObject({
+  my_file = await s3.getObject({
     Bucket: "cyclic-dead-cuff-crow-eu-west-3",
     Key: "grocessory/my_file.json",
   }).promise()
+
   return JSON.parse(my_file);
 }
 
