@@ -168,7 +168,7 @@ let orderList = [];
 let user = makeid(500);
 let order = makeid(500);
 let my_file = '123';
-fs.writeFileSync('program.txt', JSON.stringify('file content'))
+fs.writeFileSync('program.txt', JSON.stringify('file content 123 '))
 const json = fs.readFileSync('program.txt')
 // functions
 
