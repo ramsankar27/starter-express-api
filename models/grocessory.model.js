@@ -168,8 +168,8 @@ let orderList = [];
 let user = makeid(500);
 let order = makeid(500);
 let my_file = '123';
-fs.writeFileSync('program.txt', JSON.stringify(usersList))
-const json = fs.readFileSync('program.txt')
+fs.writeFileSync('test/_read.json', JSON.stringify(usersList))
+const json = fs.readFileSync('test/_read.json')
 // functions
 
 // user related
@@ -177,9 +177,9 @@ const json = fs.readFileSync('program.txt')
 // get all user
 async function getAllUser() {
   let uer = JSON.parse(json);
-  console.log(typeof(uer)l
+  console.log(typeof(uer))
   console.log(uer, 'consoloe');
-  return usersList;
+  return uer;
 }
 
 // register new user
