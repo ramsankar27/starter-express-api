@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/cyclic-software/starter-express-api#readme",
   "dependencies": {
+    "@cyclic.sh/s3fs": "^1.2.8",
     "aws-sdk": "^2.1301.0",
     "express": "^4.17.1"
   }
