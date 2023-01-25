@@ -1,4 +1,6 @@
-const fs = require('@cyclic.sh/s3fs') 
+const AWS = require("aws-sdk");
+const s3 = new AWS.S3()
+
 // database
 const usersList = [
   {
@@ -14,8 +16,11 @@ const usersList = [
   },
 ];
 
-fs.writeFileSync("programming.txt", 'its worked');
-
+await s3.putObject({
+  Body: JSON.stringify({key:"its worked"}),
+  Bucket: "cyclic-dead-cuff-crow-eu-west-3",
+  Key: "grocessory/my_file.json",
+}).promise()
 
 let productList = [
   {
@@ -174,8 +179,11 @@ let order = makeid(500);
 
 // get all user
 function getAllUser() {
-  const json = fs.readFileSync('programming.txt')
-  return json;
+  let my_file = await s3.getObject({
+    Bucket: "cyclic-dead-cuff-crow-eu-west-3",
+    Key: "grocessory/my_file.json",
+  }).promise()
+  return JSON.parse(my_file);
 }
 
 // register new user
