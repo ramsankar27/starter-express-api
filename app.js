@@ -1,6 +1,7 @@
 // Import
 const express = require('express');
 const fs = require('@cyclic.sh/s3fs') 
+console.log(1)
 console.log(fs)
 
 const grocessoryRouter = require('./routes/grocessory/grocessory.router');
