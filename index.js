@@ -1,7 +1,7 @@
 // Import
 const http = require('http');
 const app = require('./app');
-const fs = require('@cyclic.sh/s3fs') 
+
 // const { loadPlanetData } = require('./models/planets.model');
 
 // Environment variable
@@ -15,10 +15,7 @@ function loadServer() {
     // await loadPlanetData();
     // listening
     server.listen(PORT, () => {
-        
-console.log(1)
-console.log(fs)
-        console.log(`Server listening at ${PORT} ...`);
+    console.log(`Server listening at ${PORT} ...`);
     })
 }
 
