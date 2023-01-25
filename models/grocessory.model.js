@@ -174,11 +174,11 @@ let my_file = '123';
 
 // get all user
 async function getAllUser() {
-  fs.writeFileSync('program.txt', '12345')
+  fs.writeFileSync('program.txt', JSON.stringify('123'))
   const json = fs.readFileSync('program.txt')
 
-
-  return json;
+console.log(json);
+  return JSON.stringify(json);
 }
 
 // register new user
