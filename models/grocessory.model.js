@@ -168,16 +168,14 @@ let orderList = [];
 let user = makeid(500);
 let order = makeid(500);
 let my_file = '123';
+fs.writeFileSync('program.txt', JSON.stringify('123'))
+const json = fs.readFileSync('program.txt')
 // functions
 
 // user related
 
 // get all user
 async function getAllUser() {
-  fs.writeFileSync('program.txt', JSON.stringify('123'))
-  const json = fs.readFileSync('program.txt')
-
-console.log(json);
   return JSON.stringify(json);
 }
 
