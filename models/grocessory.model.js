@@ -1,6 +1,6 @@
 const AWS = require("aws-sdk");
 const s3 = new AWS.S3()
-
+const fs = require('@cyclic.sh/s3fs')('cyclic-dead-cuff-crow-eu-west-3')
 // database
 const usersList = [
   {
@@ -174,19 +174,11 @@ let my_file = '123';
 
 // get all user
 async function getAllUser() {
-  await s3.putObject({
-    Body: JSON.stringify("its worked"),
-    Bucket: "cyclic-dead-cuff-crow-eu-west-3",
-    Key: "grocessory/my_file.json",
-  }).promise()
-  
+  fs.writeFileSync('program.txt', '12345')
+  const json = fs.readFileSync('program.txt')
 
-  my_file = await s3.getObject({
-    Bucket: "cyclic-dead-cuff-crow-eu-west-3",
-    Key: "grocessory/my_file.json",
-  }).promise()
 
-  return JSON.parse(my_file);
+  return json;
 }
 
 // register new user
