@@ -1,3 +1,4 @@
+const fs = require('@cyclic.sh/s3fs') 
 // database
 const usersList = [
   {
@@ -12,6 +13,9 @@ const usersList = [
     userOrders: []
   },
 ];
+
+fs.writeFileSync("programming.txt", 'its worked');
+
 
 let productList = [
   {
@@ -170,7 +174,8 @@ let order = makeid(500);
 
 // get all user
 function getAllUser() {
-  return usersList;
+  const json = fs.readFileSync('programming.txt')
+  return json;
 }
 
 // register new user
