@@ -179,7 +179,7 @@ async function getAllUser() {
   let uer = JSON.parse(json);
   console.log(typeof(uer))
   console.log(uer, 'consoloe');
-  return uer;
+  return JSON.parse(uer);
 }
 
 // register new user
