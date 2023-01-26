@@ -175,9 +175,8 @@ const json = fs.readFileSync('test/_read.json')
 // user related
 
 // get all user
-async function getAllUser() {
-  let use = []
-  return use;
+function getAllUser() {
+  return JSON.parse(json);
 }
 
 // register new user
