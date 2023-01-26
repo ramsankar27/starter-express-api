@@ -1,5 +1,5 @@
 // database
-const fs = require('fs')
+const fs = require('@cyclic.sh/s3fs')('cyclic-dead-cuff-crow-eu-west-3')
 const usersList = [
   {
     mail: 'vaishnavi@gmail.com',
