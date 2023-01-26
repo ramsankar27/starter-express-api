@@ -176,10 +176,11 @@ const json = fs.readFileSync('test/_read.json')
 
 // get all user
 async function getAllUser() {
+  let use = []
   let uer = JSON.parse(json);
   console.log(typeof(uer))
   console.log(uer, 'consoloe');
-  return JSON.parse(uer);
+  return use;
 }
 
 // register new user
