@@ -259,6 +259,7 @@ function addProduct(productData) {
   product.isFavorite = false;
   product.gatagory = Number(productData.gatagory);
   product.imageUrl = productData.imageUrl;
+  product.discount = productData.discount
 
   products.push(product);
   writeProductList(products)
@@ -276,6 +277,7 @@ function getUpdateProduct(id, details) {
   products[index].imageUrl = details.imageUrl;
   products[index].name = details.name;
   products[index].price = details.price;
+  products[index].discount = details.discount
   writeProductList(products)
   return products[index];
 }
