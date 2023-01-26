@@ -27,9 +27,7 @@ const {
 
 // get all user
 function httpGetAllUser(req, res) {
-    let respo = getAllUser();
-    console.log(respo)
-    return res.status(200).json(respo)
+    return res.status(200).json(getAllUser())
 }
 
 // register new user
