@@ -1,7 +1,5 @@
-const AWS = require("aws-sdk");
-const s3 = new AWS.S3()
-const fs = require('@cyclic.sh/s3fs')('cyclic-dead-cuff-crow-eu-west-3')
 // database
+const fs = require('fs')
 const usersList = [
   {
     mail: 'vaishnavi@gmail.com',
@@ -165,27 +163,30 @@ let productList = [
 
 let orderList = [];
 
+try {
+  readUserList();
+} catch (error) {
+  reset()
+}
+
 let user = makeid(500);
 let order = makeid(500);
-let my_file = '123';
 // functions
 
 // user related
 
 // get all user
-async function getAllUser() {
-  fs.writeFileSync('program.txt', JSON.stringify('123'))
-  const json = fs.readFileSync('program.txt')
-
-console.log(json);
-  return JSON.stringify(json);
+function getAllUser() {
+  let users = readUserList()
+  return users;
 }
 
 // register new user
 function registerUser(userDetail) {
+  let users = readUserList()
   let userData = {};
   // set data
-  userData.userId = usersList.length;
+  userData.userId = users.length;
   userData.name = userDetail.name;
   userData.mail = userDetail.mail;
   userData.pincode = userDetail.pincode;
@@ -194,7 +195,8 @@ function registerUser(userDetail) {
   userData.password = userDetail.password;
   userData.myOrders = [];
   // push to array
-  usersList.push(userData);
+  users.push(userData);
+  writeUserList(users);
   user = makeid(500);
   order = makeid(500);
   return true;
@@ -203,19 +205,20 @@ function registerUser(userDetail) {
 // function login user
 function loginUser(mail, password) {
   let isPasswordWrong = false;
-  for (let i = 0; i < usersList.length; i++) {
-    if (usersList[i].mail === mail && usersList[i].password === password) {
+  let users = readUserList()
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].mail === mail && users[i].password === password) {
       return {
-        name: usersList[i].name,
-        mail: usersList[i].mail,
-        userId: usersList[i].userId,
-        pincode: usersList[i].pincode,
-        city: usersList[i].city,
-        address: usersList[i].address,
-        myOrders: usersList[i].myOrders
+        name: users[i].name,
+        mail: users[i].mail,
+        userId: users[i].userId,
+        pincode: users[i].pincode,
+        city: users[i].city,
+        address: users[i].address,
+        myOrders: users[i].myOrders
       }
     }
-    else if (usersList[i].mail === mail && usersList[i].password !== password) {
+    else if (users[i].mail === mail && users[i].password !== password) {
       isPasswordWrong = true;
     }
   }
@@ -224,13 +227,15 @@ function loginUser(mail, password) {
 
 //update user details
 function updateUser(userId, userDetails) {
-  let index = usersList.findIndex(x => x.userId === userId);
-  usersList[index].address = userDetails.address;
-  usersList[index].name = userDetails.name;
-  usersList[index].pincode = userDetails.pincode;
-  usersList[index].mail = userDetails.mail;
-  usersList[index].city = userDetails.city;
-  return usersList[index];
+  let users = readUserList()
+  let index = users.findIndex(x => x.userId === userId);
+  users[index].address = userDetails.address;
+  users[index].name = userDetails.name;
+  users[index].pincode = userDetails.pincode;
+  users[index].mail = userDetails.mail;
+  users[index].city = userDetails.city;
+  writeUserList(users);
+  return users[index];
 }
 
 
@@ -239,13 +244,15 @@ function updateUser(userId, userDetails) {
 
 // get all product
 function getAllProduct() {
-  return productList;
+  let products = readProductList()
+  return products;
 }
 
 // add product
 function addProduct(productData) {
+  let products = readProductList()
   let product = productData;
-  product.id = productList.length;
+  product.id = products.length;
   product.name = productData.name;
   product.description = productData.description;
   product.price = productData.price;
@@ -253,26 +260,33 @@ function addProduct(productData) {
   product.gatagory = Number(productData.gatagory);
   product.imageUrl = productData.imageUrl;
 
-  productList.push(product);
+  products.push(product);
+  writeProductList(products)
   return product;
 }
 
 
 // update product
 function getUpdateProduct(id, details) {
-  let index = productList.findIndex(x => x.id === id);
-  productList[index].description = details.description;
-  productList[index].gatagory = details.gatagory;
-  productList[index].imageUrl = details.imageUrl;
-  productList[index].name = details.name;
-  productList[index].price = details.price;
-  return productList[index];
+  let products = readProductList()
+
+  let index = products.findIndex(x => x.id === id);
+  products[index].description = details.description;
+  products[index].gatagory = details.gatagory;
+  products[index].imageUrl = details.imageUrl;
+  products[index].name = details.name;
+  products[index].price = details.price;
+  writeProductList(products)
+  return products[index];
 }
 
 // delete product
 function getDeleteProduct(id, details) {
-  let index = productList.findIndex(x => x.id === id);
-  productList.splice(index, 1);
+  let products = readProductList()
+
+  let index = products.findIndex(x => x.id === id);
+  products.splice(index, 1);
+  writeProductList(products)
   return true;
 }
 
@@ -282,30 +296,37 @@ function getDeleteProduct(id, details) {
 
 // get all order
 function getAllOrder() {
-  return orderList;
+  let orders = readOrderList()
+
+  return orders;
 }
 
 // get single user order
 function getSingleUserOrder(userId) {
-  let orders = orderList.filter(x => x.userId === userId);
+  let orderss = readOrderList()
+
+  let orders = orderss.filter(x => x.userId === userId);
   return orders;
 }
 
 // place order by user
 function placeOrder(userId, orderItems) {
-  let userIndex = usersList.findIndex(x => x.userId === userId);
+  let users = readUserList();
+  let orderss = readOrderList()
+  let userIndex = users.findIndex(x => x.userId === userId);
   let userOrdersList = orderItems;
   for (let i = 0; i < userOrdersList.length; i++) {
-    userOrdersList[i]['userName'] = usersList[userIndex].name;
+    userOrdersList[i]['userName'] = users[userIndex].name;
     userOrdersList[i]['userId'] = userId;
-    userOrdersList[i]['mail'] = usersList[userIndex].mail;
-    userOrdersList[i]['address'] = usersList[userIndex].address;
-    userOrdersList[i]['city'] = usersList[userIndex].city;
-    userOrdersList[i]['pincode'] = usersList[userIndex].pincode;
-    userOrdersList[i]['orderId'] = orderList.length;
+    userOrdersList[i]['mail'] = users[userIndex].mail;
+    userOrdersList[i]['address'] = users[userIndex].address;
+    userOrdersList[i]['city'] = users[userIndex].city;
+    userOrdersList[i]['pincode'] = users[userIndex].pincode;
+    userOrdersList[i]['orderId'] = orderss.length;
     userOrdersList[i]['status'] = 'Pending';
-    orderList.push(userOrdersList[i]);
+    orderss.push(userOrdersList[i]);
   }
+  writeOrderList(orderss);
   user = makeid(500);
   order = makeid(500);
   return getSingleUserOrder(userId);
@@ -313,15 +334,19 @@ function placeOrder(userId, orderItems) {
 
 // cancel order
 function cancelOrder(orderId) {
-  let orderIndex = orderList.findIndex(x => x.orderId === orderId);
-  orderList.splice(orderIndex, 1);
+  let orderss = readOrderList()
+  let orderIndex = orderss.findIndex(x => x.orderId === orderId);
+  orderss.splice(orderIndex, 1);
+  writeOrderList(orderss);
   return 1;
 }
 
 // delivery order
 function deliveryOrder(orderId) {
-  let orderIndex = orderList.findIndex(x => x.orderId === orderId);
-  orderList[orderIndex]['status'] = 'Delivery done!'
+  let orderss = readOrderList()
+  let orderIndex = orderss.findIndex(x => x.orderId === orderId);
+  orderss[orderIndex]['status'] = 'Delivery done!'
+  writeOrderList(orderss);
   return 1;
 }
 
@@ -341,6 +366,41 @@ function makeid(length) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
+}
+
+function readUserList() {
+  return JSON.parse(fs.readFileSync("userListGross.txt"))
+}
+
+
+function writeUserList(users) {
+  fs.writeFileSync("userListGross.txt", JSON.stringify(users))
+}
+
+
+function readProductList() {
+  return JSON.parse(fs.readFileSync("productListGross.txt"))
+}
+
+
+function writeProductList(users) {
+  fs.writeFileSync("productListGross.txt", JSON.stringify(users))
+}
+
+function readOrderList() {
+  return JSON.parse(fs.readFileSync("orderListGross.txt"))
+}
+
+
+function writeOrderList(users) {
+  fs.writeFileSync("orderListGross.txt", JSON.stringify(users))
+}
+
+function reset() {
+  writeOrderList(orderList)
+  writeProductList(productList)
+  writeUserList(usersList)
+  return true;
 }
 
 
@@ -364,5 +424,6 @@ module.exports = {
   deliveryOrder,
   // encrypt
   getUsers,
-  getOrders
+  getOrders,
+  reset
 }
