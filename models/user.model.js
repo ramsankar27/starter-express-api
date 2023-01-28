@@ -1,3 +1,5 @@
+const fs = require('@cyclic.sh/s3fs')('cyclic-dead-cuff-crow-eu-west-3')
+
 const users = [
     {
         userId: 0,
@@ -20,17 +22,24 @@ const users = [
     
 ];
 
+try {
+    readUserList();
+  } catch (error) {
+    reset()
+  }
+
 function getAllCoins() {
     return coinList;
 }
 
 function login(email, pasword){
-    for(let i=0; i<users.length; i++) {
-        if(users[i].email === email && users[i].password === pasword) {
+    let userList = readUserList()
+    for(let i=0; i<userList.length; i++) {
+        if(userList[i].email === email && userList[i].password === pasword) {
             return {
-                name: users[i].userName,
-                mail: users[i].email,
-                userId: users[i].userId
+                name: userList[i].userName,
+                mail: userList[i].email,
+                userId: userList[i].userId
             }
         } 
     }
@@ -38,27 +47,31 @@ function login(email, pasword){
 }
 
 function getSingleUserDetails(id) {
-    let userDeatils = users.find(x => x.userId === id);
+    let userList = readUserList()
+    let userDeatils = userList.find(x => x.userId === id);
     if (userDeatils) return userDeatils;
     else return false;
 }
 
 function addUser(userDetail) {
+    let userList = readUserList()
     let userData = {};
-    userData.userId = users.length;
+    userData.userId = userList.length;
     userData.history = [];
     userData.amount = 0;
     userData.coins = [];
     userData.userName = userDetail.name;
     userData.email = userDetail.mail;
     userData.password = userDetail.password;
-    users.push(userData);
+    userList.push(userData);
+    writeUserList(userList);
     return true;
 }
 
 function invest(amount, userId) {
-    let userIndex = users.findIndex(x => x.userId === userId);
-    users[userIndex].amount += parseInt(amount);  
+    let userList = readUserList()
+    let userIndex = userList.findIndex(x => x.userId === userId);
+    userList[userIndex].amount += parseInt(amount);  
 
     // make history
     let coinHistory = {
@@ -68,31 +81,35 @@ function invest(amount, userId) {
         amount: amount,
         time: new Date()
     }
+    writeUserList(userList);
     makeHistory(coinHistory, userId);
     return userIndex !== -1  ? 1 : 0;
 }
 
 function withdraw(userId) {
-    let userIndex = users.findIndex(x => x.userId === userId);
-    users[userIndex].amount = 0;
+    let userList = readUserList()
+    let userIndex = userList.findIndex(x => x.userId === userId);
+    userList[userIndex].amount = 0;
     let coinHistory = {
         name: '',
         quantity: 0,
         about: 'withdraw',
-        amount: users[userIndex].amount,
+        amount: userList[userIndex].amount,
         time: new Date()
     }
+    writeUserList(userList);
     makeHistory(coinHistory, userId)
 }
 
 
 function buyCoins(coinDetail, amount, userId) {
-    let userIndex = users.findIndex(x => x.userId === userId);
-    let existing = users[userIndex].coins.findIndex(x => x.id === coinDetail.id);
+    let userList = readUserList()
+    let userIndex = userList.findIndex(x => x.userId === userId);
+    let existing = userList[userIndex].coins.findIndex(x => x.id === coinDetail.id);
     if (existing !== -1) {
-        users[userIndex].coins[existing].purchaseQuantity += coinDetail.purchaseQuantity;
+        userList[userIndex].coins[existing].purchaseQuantity += coinDetail.purchaseQuantity;
     } else {
-        users[userIndex].coins.push(coinDetail);
+        userList[userIndex].coins.push(coinDetail);
     }
     let coinHistory = {
         name: coinDetail,
@@ -101,15 +118,17 @@ function buyCoins(coinDetail, amount, userId) {
         amount: amount,
         time: new Date()
     }
-    let amt = users[userIndex].amount;
-    users[userIndex].amount =  amt;
+    let amt = userList[userIndex].amount;
+    userList[userIndex].amount =  amt;
+    writeUserList(userList);
     makeHistory(coinHistory, userId);
 }
 
 function sellCoins(coinDetail, userId) {
-    let userIndex = users.findIndex(x => x.userId === userId);
-    let existingIndex = users[userIndex].coins.findIndex(x => x.id === coinDetail.id);
-    users[userIndex].coins.splice(existingIndex, 1);
+    let userList = readUserList()
+    let userIndex = userList.findIndex(x => x.userId === userId);
+    let existingIndex = userList[userIndex].coins.findIndex(x => x.id === coinDetail.id);
+    userList[userIndex].coins.splice(existingIndex, 1);
     let quantity = coinDetail.purchaseQuantity;
     let price = coinDetail.current_price;
     let coinHistory = {
@@ -119,20 +138,22 @@ function sellCoins(coinDetail, userId) {
         amount: quantity * price,
         time: new Date()
     }
-    users[userIndex].amount += (quantity*price);
+    userList[userIndex].amount += (quantity*price);
+    writeUserList(userList);
     makeHistory(coinHistory, userId)
 }
 
 function sendCoins(coinDetail, senderId, receiverId){
-    let senderIdIndex = users.findIndex(x => x.userId === senderId);
-    let senderCoinIndex = users[senderIdIndex].coins.findIndex(x => x.id === coinDetail.id);
-    users[senderIdIndex].coins.splice(senderCoinIndex, 1);
-    let receiverIndex = users.findIndex(x => x.userId === Number(receiverId));
-    let existing = users[receiverIndex].coins.findIndex(x => x.id === coinDetail.id);
+    let userList = readUserList()
+    let senderIdIndex = userList.findIndex(x => x.userId === senderId);
+    let senderCoinIndex = userList[senderIdIndex].coins.findIndex(x => x.id === coinDetail.id);
+    userList[senderIdIndex].coins.splice(senderCoinIndex, 1);
+    let receiverIndex = userList.findIndex(x => x.userId === Number(receiverId));
+    let existing = userList[receiverIndex].coins.findIndex(x => x.id === coinDetail.id);
     if (existing !== -1) {
-        users[receiverIndex].coins[existing].purchaseQuantity += coinDetail.purchaseQuantity;
+        userList[receiverIndex].coins[existing].purchaseQuantity += coinDetail.purchaseQuantity;
     } else {
-        users[receiverIndex].coins.push(coinDetail);
+        userList[receiverIndex].coins.push(coinDetail);
     }
     let coinHistorySender = {
         name: coinDetail,
@@ -148,16 +169,19 @@ function sendCoins(coinDetail, senderId, receiverId){
         amount: 0,
         time: new Date()
     }
+    writeUserList(userList);
     makeHistory(coinHistorySender, senderId);
     makeHistory(coinHistoryReciever, Number(receiverId));
 
 }
 
 function makeHistory(historyData, userId) {
-    let userHistory = users.find(x => x.userId === userId).history;
+    let userList = readUserList()
+    let userHistory = userList.find(x => x.userId === userId).history;
     userHistory.unshift(historyData);
-    let adminHistory = users.find(x => x.userId === 0).history;
+    let adminHistory = userList.find(x => x.userId === 0).history;
     adminHistory.unshift(historyData);
+    writeUserList(userList);
 }
 
 function getHistory(userId) {
@@ -165,15 +189,18 @@ function getHistory(userId) {
 }
 
 function getUser() {
-    return users;
+    let userList = readUserList()
+    let user = userList; 
+    return user;
 }
 
 function convertCoin(oldId, newCoin, userId) {
-    let userIndex = users.findIndex(x=> x.userId === userId);
+    let userList = readUserList()
+    let userIndex = userList.findIndex(x=> x.userId === userId);
     if(userIndex === -1) {
         return false
     }
-    let coins = users[userIndex]['coins'];
+    let coins = userList[userIndex]['coins'];
     // push new coin
     let alIndex = coins.findIndex(x=> x.id === newCoin.id);
     if(alIndex === -1) {
@@ -184,7 +211,23 @@ function convertCoin(oldId, newCoin, userId) {
     // remove old coin
     let oldIndex = coins.findIndex(x=> x.id === oldId);
     coins.splice(oldIndex, 1);
-    users[userIndex]['coins'] = coins;
+    userList[userIndex]['coins'] = coins;
+    writeUserList(userList);
+    return true;
+}
+
+
+function readUserList() {
+    return JSON.parse(fs.readFileSync("userListCrypt.txt"))
+}
+
+
+function writeUserList(users) {
+    fs.writeFileSync("userListCrypt.txt", JSON.stringify(users))
+}
+
+function reset() {
+    writeUserList(users)
     return true;
 }
 
@@ -199,5 +242,6 @@ module.exports = {
     login,
     sendCoins,
     getUser,
-    convertCoin
+    convertCoin,
+    reset
 }
