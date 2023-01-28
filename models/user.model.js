@@ -10,15 +10,6 @@ const users = [
         email: 'admin@gmail.com',
         password: '1234'
     },
-    {
-        userId: 1,
-        history: [],
-        amount: 0,
-        coins: [],
-        userName: '1',
-        email: '1',
-        password: '1'
-      }
     
 ];
 
