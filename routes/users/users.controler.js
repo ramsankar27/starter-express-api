@@ -9,7 +9,8 @@ const {
     addUser,
     sendCoins,
     getUser,
-    convertCoin
+    convertCoin,
+    reset
 }
     = require('../../models/user.model');
 
@@ -81,6 +82,10 @@ function httpConvertCoins(req, res) {
     else res.status(200).json(false);
 } 
 
+function httpReset(req, res) {
+    return res.status(200).json(reset());    
+}
+
 module.exports = {
     httpGetAllCoins,
     httpAddUser,
@@ -92,5 +97,6 @@ module.exports = {
     httpLogin,
     httpSendCoins,
     httpGetAllUser,
-    httpConvertCoins
+    httpConvertCoins,
+    httpReset
 }

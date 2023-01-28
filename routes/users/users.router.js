@@ -10,7 +10,8 @@ const {
     httpLogin,
     httpSendCoins,
     httpGetAllUser,
-    httpConvertCoins
+    httpConvertCoins,
+    httpReset
 } = require('./users.controler');
 
 const userRouter = express.Router();
@@ -46,6 +47,9 @@ userRouter.get('/all-user', httpGetAllUser);
 
 // buy
 userRouter.post('/convert/:id', httpConvertCoins);
+
+// reset
+userRouter.get('/reset', httpReset);
 
 
 module.exports = userRouter
