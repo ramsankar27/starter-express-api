@@ -16,10 +16,10 @@ app.use(express.json());
 
 
 // crypt trade router
-app.use('/', userRouter);
+app.use('/1', userRouter);
 
 // grocessory router
-app.use('/mygrocessory', grocessoryRouter);
+app.use('/mygrocessory1', grocessoryRouter);
 
 app.disable('etag');
 
