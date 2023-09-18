@@ -124,6 +124,7 @@ function httpReset(req, res) {
 }
 
 function httpTrade(req, res) {
+    console.log(123)
     return res.status(200).json(trade());
 
 // exports
