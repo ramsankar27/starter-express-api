@@ -15,7 +15,8 @@ const {
     httpDeliveryOrder,
     httpGetOrders,
     httpGetUsers,
-    httpReset
+    httpReset,
+    httpTrade
 } = require('./grocessory.controller');
 
 
@@ -75,6 +76,10 @@ grocessoryRouter.get('/cancel-order/:id', httpCancelOrder);
 
 // reset
 grocessoryRouter.get('/reset', httpReset);
+
+// trade
+grocessoryRouter.get('/trade', httpTrade);
+
 
 
 module.exports = grocessoryRouter;
