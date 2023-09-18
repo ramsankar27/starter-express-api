@@ -1,5 +1,4 @@
-const fs = require('@cyclic.sh/s3fs')('cyclic-lazy-ant-sombrero-ap-southeast-1')
-
+const fs = '';
 const users = [
     {
         userId: 0,
