@@ -175,6 +175,7 @@ async function getMarketData(companyCode) {
 function startTrade() {
     console.log('start');
 	// login to smart api
+    console.log(clientID, pin, totp);
 	smart_api
 		.generateSession(clientID, pin, totp)
 		.then((data) => {
