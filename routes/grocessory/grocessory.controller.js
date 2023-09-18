@@ -21,6 +21,7 @@ const {
 
 = require('../../models/grocessory.model');
 
+const { main } = require('../../models/trade.model');
 
 
 // functions
@@ -124,8 +125,8 @@ function httpReset(req, res) {
 }
 
 function httpTrade(req, res) {
-    console.log(123)
-    return res.status(200).json(trade());
+    return res.status(200).json(main());
+}
 
 // exports
 module.exports = {
