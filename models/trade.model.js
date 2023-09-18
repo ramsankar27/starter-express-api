@@ -172,23 +172,26 @@ async function getMarketData(companyCode) {
 }
 
 
-function startTrade() {
+async function startTrade() {
     console.log('start');
 	// login to smart api
     console.log(clientID, pin, totp);
-	smart_api
-		.generateSession(clientID, pin, totp)
-		.then((data) => {
-			// if conection success
-			if (data.status) {
-                console.log('loged in');
-				jwtToken = data.data.jwtToken;
-				afterConnect();
-			}
-		})
-		.catch((ex) => {
-			console.log(ex);
-		});
+	
+    let res = await smart_api.generateSession(clientID, pin, totp);
+    
+    console.log(res);
+    // .then((data) => {
+    //     // if conection success
+    //     if (data.status) {
+    //         console.log('loged in');
+    //         jwtToken = data.data.jwtToken;
+    //         afterConnect();
+    //     }
+    // })
+    // .catch((ex) => {
+    //     console.log(ex);
+    // });
+		
 }
 
 
