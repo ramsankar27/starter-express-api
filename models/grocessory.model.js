@@ -1,5 +1,5 @@
 // database
-const fs = require('@cyclic.sh/s3fs')('cyclic-lazy-ant-sombrero-ap-southeast-1')
+const fs = '';
 const usersList = [
   {
     mail: 'vaishnavi@gmail.com',
