@@ -173,12 +173,14 @@ async function getMarketData(companyCode) {
 
 
 function startTrade() {
+    console.log('start');
 	// login to smart api
 	smart_api
 		.generateSession(clientID, pin, totp)
 		.then((data) => {
 			// if conection success
 			if (data.status) {
+                console.log('loged in');
 				jwtToken = data.data.jwtToken;
 				afterConnect();
 			}
@@ -189,78 +191,14 @@ function startTrade() {
 }
 
 
-// wait until target start time reached.
-function waitAndStartTrade(starTime, stopTime) {
-	// count down
-	let countDown = setInterval(() => {
-		process.stdout.write('\r' + startCountDown(scriptStartTime, starTime));
-	}, 1000);
-
-	// clear count down when reached start time.
-	setTimeout(() => {
-		clearInterval(countDown)
-	}, starTime - new Date().getTime());
-
-	// run script at target start time.
-	let startScriptTimeout = setTimeout(() => {
-		startTrade()
-	}, starTime - new Date().getTime());
-
-	// stop script at target stop time.
-	if (startScriptTimeout) {
-		setTimeout(() => {
-			// stop program when reached the target time
-			isScriptStopTimeReached = true;
-			console.log('\nTrading stopped.');
-		}, stopTime - new Date().getTime());
-	}
-}
-
-
-
-// get start time and end time in milli seconds
-function getStartStopTime(startTime, endTime) {
-	// assign tartget time
-	let targetStartTime = new Date();
-	targetStartTime.setHours(startTime.split(':')[0]);
-	targetStartTime.setMinutes(startTime.split(':')[1])
-	targetStartTime.setSeconds(startTime.split(':')[2]);
-
-	// assign tartget stop time
-	let targetStopTime = new Date();
-	targetStopTime.setHours(endTime.split(':')[0]);
-	targetStopTime.setMinutes(endTime.split(':')[1]);
-	targetStopTime.setSeconds(endTime.split(':')[2]);
-
-	return { startTime: targetStartTime.getTime(), stopTime: targetStopTime.getTime() };
-}
-
-
-
-// main function
-function main() {
-	// get and set start and stop time of this script.
-	let startAndEndTime = getStartStopTime(scriptStartTime, scriptStopTime);
-	let startTime = startAndEndTime['startTime'];
-	let stopTime = startAndEndTime['stopTime'];
-
-	// if target start time crossed run immediatedly
-	// else wait until tartget start time reached
-	let waitingTimeForStart = startTime - new Date().getTime();
-	if (waitingTimeForStart < 0) {
-		let currentTime = new Date();
-		let currentTimeFormat = currentTime.getHours() + ':' + currentTime.getMinutes();
-		process.stdout.write('Script Start at ' + currentTimeFormat + '\r');
-		startTrade();
-	}
-	else waitAndStartTrade(startTime, stopTime);
-}
-
 //-----------------------------------------------------------------------
 // Constants
 //-----------------------------------------------------------------------
 
 
+function main() {
+    startTrade();
+}
 
 module.exports = {
     main
