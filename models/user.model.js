@@ -1,4 +1,4 @@
-const fs = require('@cyclic.sh/s3fs')('cyclic-dead-cuff-crow-eu-west-3')
+const fs = require('@cyclic.sh/s3fs')('cyclic-lazy-ant-sombrero-ap-southeast-1')
 
 const users = [
     {
