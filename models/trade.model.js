@@ -176,16 +176,16 @@ async function startTrade() {
     console.log('start');
 	// login to smart api
     console.log(clientID, pin, totp);
-
+    console.log(smart_api);
     try {
         
         let res = await smart_api.generateSession(clientID, pin, totp);
+        console.log(res);
     } catch (error) {
         console.log(error);
     }
 	
     
-    console.log(res);
     // .then((data) => {
     //     // if conection success
     //     if (data.status) {
