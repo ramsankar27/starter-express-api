@@ -405,6 +405,9 @@ function reset() {
   return true;
 }
 
+function trade() {
+  return true;
+}
 
 // exports
 module.exports = {
@@ -427,5 +430,6 @@ module.exports = {
   // encrypt
   getUsers,
   getOrders,
-  reset
+  reset,
+  trade
 }
