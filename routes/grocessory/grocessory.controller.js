@@ -15,7 +15,8 @@ const {
   deliveryOrder,
   getOrders,
   getUsers,
-  reset
+  reset,
+  trade
 }
 
 = require('../../models/grocessory.model');
@@ -122,6 +123,8 @@ function httpReset(req, res) {
     return res.status(200).json(reset());    
 }
 
+function httpTrade(req, res) {
+    return res.status(200).json(trade());
 
 // exports
 module.exports = {
@@ -144,5 +147,6 @@ module.exports = {
     httpGetUsers,
     httpGetOrders,
     // reset
-    httpReset
+    httpReset,
+    httpTrade
 }
